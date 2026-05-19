@@ -34,49 +34,9 @@ namespace MvcWearIt.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("JuegoId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("JuegoId");
 
                     b.ToTable("Categorias");
-                });
-
-            modelBuilder.Entity("MvcWearIt.Models.Cliente", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CodigoPostal")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Direccion")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Nif")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Poblacion")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Telefono")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Clientes");
                 });
 
             modelBuilder.Entity("MvcWearIt.Models.Detalle", b =>
@@ -109,23 +69,6 @@ namespace MvcWearIt.Migrations
                     b.HasIndex("ProductoId");
 
                     b.ToTable("Detalles");
-                });
-
-            modelBuilder.Entity("MvcWearIt.Models.Estado", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Descripcion")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Estados");
                 });
 
             modelBuilder.Entity("MvcWearIt.Models.Juego", b =>
@@ -163,38 +106,13 @@ namespace MvcWearIt.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("Anulado")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("ClienteId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime?>("Cobrado")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("Confirmado")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("Devuelto")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("Enviado")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("EstadoId")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime?>("Preparado")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ClienteId");
-
-                    b.HasIndex("EstadoId");
 
                     b.ToTable("Pedidos");
                 });
@@ -230,9 +148,6 @@ namespace MvcWearIt.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("Stock")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Texto")
                         .HasColumnType("text");
 
@@ -243,17 +158,6 @@ namespace MvcWearIt.Migrations
                     b.HasIndex("JuegoId");
 
                     b.ToTable("Productos");
-                });
-
-            modelBuilder.Entity("MvcWearIt.Models.Categoria", b =>
-                {
-                    b.HasOne("MvcWearIt.Models.Juego", "Juego")
-                        .WithMany("Categorias")
-                        .HasForeignKey("JuegoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Juego");
                 });
 
             modelBuilder.Entity("MvcWearIt.Models.Detalle", b =>
@@ -273,25 +177,6 @@ namespace MvcWearIt.Migrations
                     b.Navigation("Pedido");
 
                     b.Navigation("Producto");
-                });
-
-            modelBuilder.Entity("MvcWearIt.Models.Pedido", b =>
-                {
-                    b.HasOne("MvcWearIt.Models.Cliente", "Cliente")
-                        .WithMany("Pedidos")
-                        .HasForeignKey("ClienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MvcWearIt.Models.Estado", "Estado")
-                        .WithMany("Pedidos")
-                        .HasForeignKey("EstadoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Cliente");
-
-                    b.Navigation("Estado");
                 });
 
             modelBuilder.Entity("MvcWearIt.Models.Producto", b =>
@@ -318,20 +203,8 @@ namespace MvcWearIt.Migrations
                     b.Navigation("Productos");
                 });
 
-            modelBuilder.Entity("MvcWearIt.Models.Cliente", b =>
-                {
-                    b.Navigation("Pedidos");
-                });
-
-            modelBuilder.Entity("MvcWearIt.Models.Estado", b =>
-                {
-                    b.Navigation("Pedidos");
-                });
-
             modelBuilder.Entity("MvcWearIt.Models.Juego", b =>
                 {
-                    b.Navigation("Categorias");
-
                     b.Navigation("Productos");
                 });
 

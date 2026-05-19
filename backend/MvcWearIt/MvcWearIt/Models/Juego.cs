@@ -18,9 +18,6 @@ namespace MvcWearIt.Models
 
         [Display(Name = "Color Corporativo (Hex)")]
         public string? ColorHex { get; set; } // Ej: "#FF4655"
-
-        // Relaciones
-        public ICollection<Categoria> Categorias { get; set; } = new List<Categoria>();
         public ICollection<Producto> Productos { get; set; } = new List<Producto>();
     }
 }

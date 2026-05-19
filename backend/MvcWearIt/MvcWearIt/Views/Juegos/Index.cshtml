@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Inicio - MvcWearIt";
+}
+
+<div class="container text-center mt-5">
+    <h1 class="display-4 mb-4">Selecciona tu Videojuego</h1>
+
+    <div id="contenedor-juegos" class="row justify-content-center"></div>
+</div>
+
+<template id="plantilla-juego">
+    <div class="col-md-4 mb-4">
+        <div class="card tarjeta-juego h-100 shadow-sm" style="cursor: pointer; border: 2px solid #333; transition: transform 0.2s;">
+            <div class="card-body d-flex align-items-center justify-content-center" style="min-height: 150px;">
+                <h3 class="nombre-juego text-dark m-0">Nombre del Juego</h3>
+            </div>
+        </div>
+    </div>
+</template>
+
+@section Scripts {
+    <script src="~/js/inicio.js"></script>
+}

@@ -1,0 +1,48 @@
+@{
+    ViewData["Title"] = "Panel de Administración";
+}
+
+<h1 class="mb-4">Panel de Administración</h1>
+
+<div class="row g-4">
+    <div class="col-md-3">
+        <a asp-controller="Usuarios" asp-action="Index" class="text-decoration-none">
+            <div class="card text-white bg-primary h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h2 class="card-title display-6">@ViewBag.UsuariosCount</h2>
+                    <p class="card-text fs-5">Usuarios</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a asp-controller="Juegos" asp-action="AdminIndex" class="text-decoration-none">
+            <div class="card text-white bg-success h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h2 class="card-title display-6">@ViewBag.JuegosCount</h2>
+                    <p class="card-text fs-5">Juegos</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a asp-controller="Productos" asp-action="Index" class="text-decoration-none">
+            <div class="card text-white bg-warning h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h2 class="card-title display-6">@ViewBag.ProductosCount</h2>
+                    <p class="card-text fs-5">Productos</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a asp-controller="Pedidos" asp-action="Index" class="text-decoration-none">
+            <div class="card text-white bg-danger h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h2 class="card-title display-6">@ViewBag.PedidosCount</h2>
+                    <p class="card-text fs-5">Pedidos</p>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>

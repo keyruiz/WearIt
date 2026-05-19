@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject MvcWearIt.Data.MvcWearItContexto _context
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -20,13 +24,23 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                        @if (SignInManager.IsSignedIn(User) && User.IsInRole("Administrador"))
+                        {
+                            <li class="nav-item ms-2">
+                                <a class="nav-link text-danger fw-bold" asp-controller="Admin" asp-action="Index">Dashboard</a>
+                            </li>
+                            <li class="nav-item ms-2">
+                                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index">Mis Datos</a>
+                            </li>
+                        }
                     </ul>
+                    @if (!SignInManager.IsSignedIn(User) || !User.IsInRole("Administrador"))
+                    {
+                        <a href="/Carrito" class="btn btn-outline-dark position-relative me-2" title="Mi Carrito">
+                            🛒 Carrito
+                            <span id="carrito-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">0</span>
+                        </a>
+                    }
                     <partial name="_LoginPartial" />
                 </div>
             </div>
@@ -47,5 +61,13 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+        const badge = document.getElementById("carrito-badge");
+        if (carrito.length > 0) {
+            badge.textContent = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+            badge.classList.remove("d-none");
+        }
+    </script>
 </body>
 </html>

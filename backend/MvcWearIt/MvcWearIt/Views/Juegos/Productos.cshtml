@@ -1,0 +1,44 @@
+@model IEnumerable<MvcWearIt.Models.Producto>
+@{
+    var juego = ViewBag.Juego as MvcWearIt.Models.Juego;
+    ViewData["Title"] = "Productos de " + juego?.Nombre;
+}
+
+<h1>@juego?.Nombre</h1>
+
+<form method="get" class="row g-3 mb-3">
+    <div class="col-auto">
+        <select name="categoriaId" class="form-select" asp-items="ViewBag.Categorias" onchange="this.form.submit()">
+            <option value="">Todas las categorías</option>
+        </select>
+    </div>
+    <div class="col-auto">
+        <a asp-action="AdminIndex" class="btn btn-secondary">Volver a Juegos</a>
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(m => m.Descripcion)</th>
+            <th>Categoría</th>
+            <th>@Html.DisplayNameFor(m => m.Precio)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Descripcion</td>
+                <td>@item.Categoria?.Descripcion</td>
+                <td>@item.PrecioCadena</td>
+                <td>
+                    <a asp-controller="Productos" asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
+                    <a asp-controller="Productos" asp-action="Details" asp-route-id="@item.Id">Detalles</a> |
+                    <a asp-controller="Productos" asp-action="Delete" asp-route-id="@item.Id">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

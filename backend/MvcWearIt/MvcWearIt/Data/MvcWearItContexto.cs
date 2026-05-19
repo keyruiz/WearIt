@@ -12,14 +12,21 @@ namespace MvcWearIt.Data
         public DbSet<Juego> Juegos { get; set; }
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<Producto> Productos { get; set; }
-        public DbSet<Cliente> Clientes { get; set; }
-        public DbSet<Estado> Estados { get; set; }
+
         public DbSet<Pedido> Pedidos { get; set; }
         public DbSet<Detalle> Detalles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            // Le decimos explícitamente cómo es la relación Categoría -> Productos
+            modelBuilder.Entity<Pedido>().Ignore(p => p.UserEmail);
+
+            modelBuilder.Entity<Categoria>()
+                .HasMany(c => c.Productos)
+                .WithOne(p => p.Categoria)
+                .HasForeignKey(p => p.CategoriaId); // La clave foránea está en Producto, ¡no en Categoria!
 
             // Tipos de datos decimales para evitar warnings
             modelBuilder.Entity<Producto>().Property(p => p.Precio).HasColumnType("decimal(18, 2)");

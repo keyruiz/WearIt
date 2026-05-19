@@ -1,0 +1,60 @@
+@model Microsoft.AspNetCore.Identity.IdentityUser
+@{
+    ViewData["Title"] = "Datos de " + Model.Email;
+    var pedidos = ViewBag.Pedidos as List<MvcWearIt.Models.Pedido>;
+}
+
+<h1>@Model.Email</h1>
+
+<h4>Datos del Usuario</h4>
+<hr />
+<dl class="row">
+    <dt class="col-sm-2">Email</dt>
+    <dd class="col-sm-10">@Model.Email</dd>
+    <dt class="col-sm-2">Usuario</dt>
+    <dd class="col-sm-10">@Model.UserName</dd>
+    <dt class="col-sm-2">Teléfono</dt>
+    <dd class="col-sm-10">@Model.PhoneNumber</dd>
+</dl>
+
+<h4 class="mt-4">Historial de Compras</h4>
+<hr />
+
+@if (pedidos == null || pedidos.Count == 0)
+{
+    <p>Este usuario no ha realizado ninguna compra.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Pedido Id</th>
+                <th>Fecha</th>
+                <th>Productos</th>
+                <th>Total</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var pedido in pedidos)
+            {
+                <tr>
+                    <td>@pedido.Id</td>
+                    <td>@pedido.Fecha.ToString("g")</td>
+                    <td>
+                        @string.Join(", ", pedido.Detalles.Select(d => d.Producto?.Descripcion))
+                    </td>
+                    <td>@pedido.Detalles.Sum(d => d.Precio * d.Cantidad).ToString("C")</td>
+                    <td>
+                        <a asp-controller="Pedidos" asp-action="Details" asp-route-id="@pedido.Id">Ver Pedido</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<div>
+    <a asp-action="Index">Volver a Usuarios</a>
+</div>

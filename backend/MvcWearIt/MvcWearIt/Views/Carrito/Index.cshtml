@@ -1,0 +1,63 @@
+﻿@{
+    ViewData["Title"] = "Mi Carrito";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Mi Carrito de la Compra</h2>
+
+    <div id="carrito-vacio" class="text-center py-5 d-none">
+        <h3 class="text-muted">Tu carrito está vacío</h3>
+        <a href="/Juegos/Index" class="btn btn-primary mt-3">Volver a la tienda</a>
+    </div>
+
+    <div id="carrito-con-datos" class="d-none">
+        <table class="table table-bordered bg-white shadow-sm align-middle">
+            <thead class="table-dark text-center">
+                <tr>
+                    <th>Producto</th>
+                    <th>Precio Unidad</th>
+                    <th>Cantidad</th>
+                    <th>Subtotal</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="cuerpo-carrito"></tbody>
+            <tfoot>
+                <tr class="table-light">
+                    <td colspan="3" class="text-end fw-bold fs-5">TOTAL COMPRA:</td>
+                    <td id="total-carrito" class="text-end fw-bold fs-5 text-success">0.00 €</td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div class="d-flex justify-content-between mt-4">
+            <a href="/Juegos/Index" class="btn btn-outline-dark">← Seguir comprando</a>
+            <button id="btn-confirmar" class="btn btn-success btn-lg fw-bold px-5" data-autenticado="@User.Identity.IsAuthenticated.ToString().ToLower()">
+                Confirmar Pedido ✓
+            </button>
+        </div>
+    </div>
+</div>
+
+<template id="plantilla-fila-carrito">
+    <tr>
+        <td class="prod-descripcion fw-bold"></td>
+        <td class="prod-precio text-center"></td>
+        <td class="text-center">
+            <div class="d-flex justify-content-center align-items-center">
+                <button class="btn btn-sm btn-outline-secondary btn-menos mx-1">-</button>
+                <span class="prod-cantidad fw-bold px-2">1</span>
+                <button class="btn btn-sm btn-outline-secondary btn-mas mx-1">+</button>
+            </div>
+        </td>
+        <td class="prod-subtotal text-end fw-bold"></td>
+        <td class="text-center">
+            <button class="btn btn-danger btn-sm btn-eliminar">Eliminar</button>
+        </td>
+    </tr>
+</template>
+
+@section Scripts {
+    <script src="~/js/carrito.js"></script>
+}
