@@ -7,7 +7,7 @@
 });
 
 function cargarProductosEscaparate(juegoId, categoriaId) {
-    // Construimos la URL de la API. Si categoriaId está vacío, el backend enviará solo los destacados (Escaparate == true)
+    // Construimos la URL de la API. Si categoriaId está vacío, el backend devuelve todos los productos del juego
     let url = `/Escaparate/ObtenerProductos?juegoId=${juegoId}`;
     if (categoriaId) {
         url += `&id=${categoriaId}`;
@@ -35,6 +35,7 @@ function cargarProductosEscaparate(juegoId, categoriaId) {
                 clon.querySelector(".producto-descripcion").textContent = prod.descripcion;
                 clon.querySelector(".producto-categoria").textContent = prod.categoria ? prod.categoria.descripcion : "General";
                 clon.querySelector(".producto-precio").textContent = `${prod.precio} €`;
+                clon.querySelector(".producto-imagen").src = prod.imagen ? `/imagenes/${prod.imagen}` : "/imagenes/imagen-no-disponible.jpg";
 
 
                 // BOTÓN AÑADIR AL CARRITO (Con localStorage)
@@ -56,14 +57,15 @@ function cargarProductosEscaparate(juegoId, categoriaId) {
                             id: prod.id,
                             descripcion: prod.descripcion,
                             precio: prod.precio,
-                            cantidad: 1
+                            cantidad: 1,
+                            imagen: prod.imagen || ""
                         });
                     }
 
                     // 3. Guardamos el carrito actualizado de vuelta en el localStorage
                     localStorage.setItem("carrito", JSON.stringify(carrito));
 
-                    alert(`¡${prod.descripcion} añadido al carrito!`);
+                    actualizarContadorCarrito();
                 };
 
                 // CLIC EN LA TARJETA (Ver detalle)

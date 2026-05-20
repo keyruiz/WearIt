@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,16 +16,28 @@ namespace MvcWearIt.Controllers
     public class PedidosController : Controller
     {
         private readonly MvcWearItContexto _context;
+        private readonly ApplicationDbContext _identityContext;
 
-        public PedidosController(MvcWearItContexto context)
+        public PedidosController(MvcWearItContexto context, ApplicationDbContext identityContext)
         {
             _context = context;
+            _identityContext = identityContext;
         }
 
         // GET: Pedidos
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Pedidos.ToListAsync());
+            var pedidos = await _context.Pedidos
+                .OrderByDescending(p => p.Fecha)
+                .ToListAsync();
+
+            var userIds = pedidos.Where(p => p.UserId != null).Select(p => p.UserId).Distinct().ToList();
+            var usuarios = await _identityContext.Users
+                .Where(u => userIds.Contains(u.Id))
+                .ToDictionaryAsync(u => u.Id, u => u.Email);
+
+            ViewBag.Usuarios = usuarios;
+            return View(pedidos);
         }
 
         // GET: Pedidos/Details/5
@@ -36,113 +49,21 @@ namespace MvcWearIt.Controllers
             }
 
             var pedido = await _context.Pedidos
+                .Include(p => p.Detalles)
+                .ThenInclude(d => d.Producto)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (pedido == null)
             {
                 return NotFound();
             }
 
-            return View(pedido);
-        }
-
-        // GET: Pedidos/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Fecha,UserId,UserEmail")] Pedido pedido)
-        {
-            if (ModelState.IsValid)
+            if (pedido.UserId != null)
             {
-                _context.Add(pedido);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(pedido);
-        }
-
-        // GET: Pedidos/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var pedido = await _context.Pedidos.FindAsync(id);
-            if (pedido == null)
-            {
-                return NotFound();
-            }
-            return View(pedido);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Fecha,UserId,UserEmail")] Pedido pedido)
-        {
-            if (id != pedido.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(pedido);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PedidoExists(pedido.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(pedido);
-        }
-
-        // GET: Pedidos/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var pedido = await _context.Pedidos
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (pedido == null)
-            {
-                return NotFound();
+                var user = await _identityContext.Users.FindAsync(pedido.UserId);
+                ViewBag.UserEmail = user?.Email;
             }
 
             return View(pedido);
-        }
-
-        // POST: Pedidos/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var pedido = await _context.Pedidos.FindAsync(id);
-            if (pedido != null)
-            {
-                _context.Pedidos.Remove(pedido);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
         }
 
         private bool PedidoExists(int id)

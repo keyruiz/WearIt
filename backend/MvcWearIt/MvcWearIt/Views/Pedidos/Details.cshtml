@@ -1,34 +1,54 @@
 ﻿@model MvcWearIt.Models.Pedido
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalles del Pedido";
 }
 
-<h1>Details</h1>
+<h1>Detalles del Pedido</h1>
 
 <div>
-    <h4>Pedido</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>
-        <dd class = "col-sm-10">@Model.Id</dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Fecha)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Fecha)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UserEmail)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UserEmail)
-        </dd>
+        <dt class="col-sm-2">Nº Pedido</dt>
+        <dd class="col-sm-10">@Model.Id</dd>
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Fecha)</dt>
+        <dd class="col-sm-10">@Model.Fecha.ToString("dd/MM/yyyy HH:mm")</dd>
+        <dt class="col-sm-2">Usuario</dt>
+        <dd class="col-sm-10">@Model.UserId</dd>
+        <dt class="col-sm-2">Email</dt>
+        <dd class="col-sm-10">@ViewBag.UserEmail</dd>
     </dl>
 </div>
+
+<h3>Productos</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio Unitario</th>
+            <th>Subtotal</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var detalle in Model.Detalles)
+        {
+            <tr>
+                <td>@detalle.Producto?.Descripcion</td>
+                <td>@detalle.Cantidad</td>
+                <td>@detalle.Precio.ToString("C")</td>
+                <td>@((detalle.Cantidad * detalle.Precio).ToString("C"))</td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr class="table-light">
+            <td colspan="3" class="text-end fw-bold">Total</td>
+            <td class="fw-bold">@Model.Detalles.Sum(d => d.Cantidad * d.Precio).ToString("C")</td>
+        </tr>
+    </tfoot>
+</table>
+
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Volver a la lista</a>
 </div>

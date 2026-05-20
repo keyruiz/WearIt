@@ -29,6 +29,7 @@ function pintarCarrito() {
 
         const clon = molde.content.cloneNode(true);
         clon.querySelector(".prod-descripcion").textContent = item.descripcion;
+        clon.querySelector(".prod-imagen").src = item.imagen ? `/imagenes/${item.imagen}` : "/imagenes/imagen-no-disponible.jpg";
         clon.querySelector(".prod-precio").textContent = `${item.precio.toFixed(2)} €`;
         clon.querySelector(".prod-cantidad").textContent = item.cantidad;
         clon.querySelector(".prod-subtotal").textContent = `${subtotal.toFixed(2)} €`;
@@ -62,8 +63,8 @@ function pintarCarrito() {
         const estaAutenticado = btnConfirmar.getAttribute("data-autenticado") === "true";
 
         if (!estaAutenticado) {
-            alert("Para procesar la compra necesitas iniciar sesión.");
-            window.location.href = "/Identity/Account/Login";
+            alert("Para procesar la compra necesitas registrarte o iniciar sesión.");
+            window.location.href = "/Identity/Account/Register";
             return;
         }
 

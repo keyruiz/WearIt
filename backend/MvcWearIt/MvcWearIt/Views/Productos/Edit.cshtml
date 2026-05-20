@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
@@ -24,24 +24,23 @@
                 <span asp-validation-for="Texto" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Precio" class="control-label"></label>
-                <input asp-for="Precio" class="form-control" />
-                <span asp-validation-for="Precio" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="PrecioCadena" class="control-label"></label>
                 <input asp-for="PrecioCadena" class="form-control" />
                 <span asp-validation-for="PrecioCadena" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Escaparate" class="control-label"></label>
-                <input asp-for="Escaparate" class="form-control" />
-                <span asp-validation-for="Escaparate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Imagen" class="control-label"></label>
-                <input asp-for="Imagen" class="form-control" />
-                <span asp-validation-for="Imagen" class="text-danger"></span>
+                <label class="control-label">Imagen</label>
+                <div>
+                    @{
+                        var nombreImagen = "imagen-no-disponible.jpg";
+                        if (Model.Imagen != null)
+                        {
+                            nombreImagen = Model.Imagen;
+                        }
+                    }
+                    <img src="~/imagenes/@nombreImagen" height="100" asp-append-version="true" />
+                </div>
+                <input type="file" name="imagen" class="form-control-file" />
             </div>
             <div class="form-group">
                 <label asp-for="CategoriaId" class="control-label"></label>
@@ -54,7 +53,7 @@
                 <span asp-validation-for="JuegoId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Guardar" class="btn btn-primary" />
             </div>
         </form>
     </div>

@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
@@ -24,9 +24,18 @@
                 <span asp-validation-for="Slug" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ImagenPortada" class="control-label"></label>
-                <input asp-for="ImagenPortada" class="form-control" />
-                <span asp-validation-for="ImagenPortada" class="text-danger"></span>
+                <label class="control-label">Imagen de Portada</label>
+                <div>
+                    @{
+                        var nombreImagen = "imagen-no-disponible.jpg";
+                        if (Model.ImagenPortada != null)
+                        {
+                            nombreImagen = Model.ImagenPortada;
+                        }
+                    }
+                    <img src="~/imagenes/@nombreImagen" height="100" asp-append-version="true" />
+                </div>
+                <input type="file" name="imagen" class="form-control-file" />
             </div>
             <div class="form-group">
                 <label asp-for="ColorHex" class="control-label"></label>
@@ -34,7 +43,7 @@
                 <span asp-validation-for="ColorHex" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Guardar" class="btn btn-primary" />
             </div>
         </form>
     </div>

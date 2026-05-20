@@ -34,17 +34,18 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.PrecioCadena)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Escaparate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Escaparate)
-        </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Imagen)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Imagen)
+        <dd class="col-sm-10">
+            @{
+                var nombreImagen = "imagen-no-disponible.jpg";
+                if (Model.Imagen != null)
+                {
+                    nombreImagen = Model.Imagen;
+                }
+            }
+            <img src="~/imagenes/@nombreImagen" height="150" asp-append-version="true" />
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Categoria)
@@ -62,5 +63,6 @@
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="CambiarImagen" asp-route-id="@Model?.Id">Cambiar Imagen</a> |
     <a asp-action="Index">Back to List</a>
 </div>

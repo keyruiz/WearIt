@@ -43,14 +43,27 @@ namespace MvcWearIt.Controllers
 
             if (id == null)
             {
-                var destacados = await consulta.Where(p => p.Escaparate == true).ToListAsync();
-                return Json(destacados);
+                return Json(await consulta.ToListAsync());
             }
             else
             {
-                var porCategoria = await consulta.Where(p => p.CategoriaId == id).ToListAsync();
-                return Json(porCategoria);
+                return Json(await consulta.Where(p => p.CategoriaId == id).ToListAsync());
             }
+        }
+
+        // GET: /Escaparate/Detalle/5
+        public async Task<IActionResult> Detalle(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var producto = await _context.Productos
+                .Include(p => p.Categoria)
+                .Include(p => p.Juego)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (producto == null) return NotFound();
+
+            return View(producto);
         }
     }
 }

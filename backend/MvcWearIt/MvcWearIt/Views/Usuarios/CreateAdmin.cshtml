@@ -1,0 +1,35 @@
+@{
+    ViewData["Title"] = "Crear Administrador";
+}
+
+<h1>Crear Administrador</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreateAdmin" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <div class="form-floating mb-3">
+                <input name="userName" class="form-control" autocomplete="off" aria-required="true" placeholder="admin" />
+                <label class="form-label">Nombre de Usuario</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input name="email" type="email" class="form-control" autocomplete="off" aria-required="true" placeholder="admin@ejemplo.com" />
+                <label class="form-label">Email</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input name="password" type="password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="contraseña" />
+                <label class="form-label">Contraseña</label>
+            </div>
+            <button type="submit" class="w-100 btn btn-lg btn-danger">Crear Administrador</button>
+        </form>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a asp-action="Index">Volver a la lista</a>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

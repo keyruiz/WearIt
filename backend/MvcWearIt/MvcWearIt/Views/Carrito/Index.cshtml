@@ -15,6 +15,7 @@
             <thead class="table-dark text-center">
                 <tr>
                     <th>Producto</th>
+                    <th>Imagen</th>
                     <th>Precio Unidad</th>
                     <th>Cantidad</th>
                     <th>Subtotal</th>
@@ -24,7 +25,7 @@
             <tbody id="cuerpo-carrito"></tbody>
             <tfoot>
                 <tr class="table-light">
-                    <td colspan="3" class="text-end fw-bold fs-5">TOTAL COMPRA:</td>
+                    <td colspan="4" class="text-end fw-bold fs-5">TOTAL COMPRA:</td>
                     <td id="total-carrito" class="text-end fw-bold fs-5 text-success">0.00 €</td>
                     <td></td>
                 </tr>
@@ -43,6 +44,7 @@
 <template id="plantilla-fila-carrito">
     <tr>
         <td class="prod-descripcion fw-bold"></td>
+        <td class="text-center"><img class="prod-imagen" height="50" width="50" style="object-fit:cover" /></td>
         <td class="prod-precio text-center"></td>
         <td class="text-center">
             <div class="d-flex justify-content-center align-items-center">

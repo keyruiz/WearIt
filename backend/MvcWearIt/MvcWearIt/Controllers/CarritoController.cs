@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using MvcWearIt.Data;
 using MvcWearIt.Models;
 
-[Authorize]
 public class CarritoController : Controller
 {
     private readonly MvcWearItContexto _context;
@@ -20,6 +19,7 @@ public class CarritoController : Controller
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> ConfirmarPedido([FromBody] List<ItemCarrito> items)
     {
         if (items == null || items.Count == 0)

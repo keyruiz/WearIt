@@ -427,3 +427,7 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# Imágenes subidas por el admin
+**/wwwroot/imagenes/*
+!**/wwwroot/imagenes/imagen-no-disponible.jpg

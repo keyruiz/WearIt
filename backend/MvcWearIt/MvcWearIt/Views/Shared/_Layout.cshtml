@@ -7,7 +7,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - MvcWearIt</title>
+    <title>@ViewData["Title"] - WearIt</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -17,21 +17,30 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MvcWearIt</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Juegos" asp-action="Index">MvcWearIt</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        @if (SignInManager.IsSignedIn(User) && User.IsInRole("Administrador"))
+                        @if (SignInManager.IsSignedIn(User))
                         {
-                            <li class="nav-item ms-2">
-                                <a class="nav-link text-danger fw-bold" asp-controller="Admin" asp-action="Index">Dashboard</a>
-                            </li>
-                            <li class="nav-item ms-2">
-                                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index">Mis Datos</a>
-                            </li>
+                            @if (User.IsInRole("Administrador"))
+                            {/*
+                                <li class="nav-item ms-2">
+                                    <a class="nav-link text-danger fw-bold" asp-controller="Admin" asp-action="Index">Dashboard</a>
+                                </li>*/
+                            }
+                            else
+                            {
+                                <li class="nav-item ms-2">
+                                    <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index">Mis Datos</a>
+                                </li>
+                                <li class="nav-item ms-2">
+                                    <a class="nav-link text-dark" asp-controller="MisPedidos" asp-action="Index">Mis Pedidos</a>
+                                </li>
+                            }
                         }
                     </ul>
                     @if (!SignInManager.IsSignedIn(User) || !User.IsInRole("Administrador"))
@@ -62,12 +71,20 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
     <script>
-        const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-        const badge = document.getElementById("carrito-badge");
-        if (carrito.length > 0) {
-            badge.textContent = carrito.reduce((sum, item) => sum + item.cantidad, 0);
-            badge.classList.remove("d-none");
+        function actualizarContadorCarrito() {
+            const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+            const badge = document.getElementById("carrito-badge");
+            if (badge) {
+                const total = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+                if (total > 0) {
+                    badge.textContent = total;
+                    badge.classList.remove("d-none");
+                } else {
+                    badge.classList.add("d-none");
+                }
+            }
         }
+        actualizarContadorCarrito();
     </script>
 </body>
 </html>

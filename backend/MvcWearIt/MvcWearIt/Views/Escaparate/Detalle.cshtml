@@ -1,0 +1,79 @@
+@model MvcWearIt.Models.Producto
+
+@{
+    ViewData["Title"] = Model.Descripcion;
+    var juegoSlug = Model.Juego?.Slug ?? "";
+    var juegoId = Model.JuegoId;
+}
+
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/Juegos/Index">Juegos</a></li>
+            <li class="breadcrumb-item"><a href="/Escaparate?juegoId=@juegoId">@Model.Juego?.Nombre</a></li>
+            <li class="breadcrumb-item active">@Model.Descripcion</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="text-center">
+                @{
+                    var nombreImagen = "imagen-no-disponible.jpg";
+                    if (Model.Imagen != null)
+                    {
+                        nombreImagen = Model.Imagen;
+                    }
+                }
+                <img src="~/imagenes/@nombreImagen" class="img-fluid rounded shadow" style="max-height:400px;object-fit:contain" asp-append-version="true" />
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h1 class="display-6">@Model.Descripcion</h1>
+            <p class="text-muted">@Model.Categoria?.Descripcion</p>
+            <hr />
+            <p class="fs-3 fw-bold text-success">@Model.Precio.ToString("C")</p>
+            <hr />
+            @if (!string.IsNullOrEmpty(Model.Texto))
+            {
+                <p>@Model.Texto</p>
+            }
+            <button class="btn btn-primary btn-lg boton-carrito" data-id="@Model.Id" data-descripcion="@Model.Descripcion" data-precio="@Model.Precio" data-imagen="@Model.Imagen">
+                Añadir al Carrito
+            </button>
+            <a href="/Escaparate?juegoId=@juegoId" class="btn btn-outline-secondary btn-lg ms-2">Volver</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.querySelector(".boton-carrito")?.addEventListener("click", function () {
+            const btn = this;
+            const producto = {
+                id: parseInt(btn.dataset.id),
+                descripcion: btn.dataset.descripcion,
+                precio: parseFloat(btn.dataset.precio),
+                cantidad: 1,
+                imagen: btn.dataset.imagen || ""
+            };
+
+            let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+            const existente = carrito.find(item => item.id === producto.id);
+            if (existente) {
+                existente.cantidad++;
+            } else {
+                carrito.push(producto);
+            }
+            localStorage.setItem("carrito", JSON.stringify(carrito));
+            actualizarContadorCarrito();
+
+            const badge = document.getElementById("carrito-badge");
+            if (badge) {
+                const total = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+                badge.textContent = total;
+                badge.classList.remove("d-none");
+            }
+        });
+    </script>
+}

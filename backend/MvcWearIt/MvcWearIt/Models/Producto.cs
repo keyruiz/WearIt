@@ -27,7 +27,6 @@ namespace MvcWearIt.Models
             set { Precio = Convert.ToDecimal(value.Replace('.', ',')); }
         }
 
-        public bool? Escaparate { get; set; }
         public string? Imagen { get; set; }
 
         // Relación con Categoría

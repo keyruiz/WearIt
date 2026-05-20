@@ -1,39 +1,53 @@
 @model Microsoft.AspNetCore.Identity.IdentityUser
+
 @{
-    ViewData["Title"] = "Datos de " + Model.Email;
-    var pedidos = ViewBag.Pedidos as List<MvcWearIt.Models.Pedido>;
+    ViewData["Title"] = "Detalles de Usuario";
+    var esAdmin = (bool)ViewBag.EsAdmin;
+    var pedidos = (List<MvcWearIt.Models.Pedido>)ViewBag.Pedidos;
 }
 
-<h1>@Model.Email</h1>
+<h1>Detalles de Usuario</h1>
 
-<h4>Datos del Usuario</h4>
-<hr />
-<dl class="row">
-    <dt class="col-sm-2">Email</dt>
-    <dd class="col-sm-10">@Model.Email</dd>
-    <dt class="col-sm-2">Usuario</dt>
-    <dd class="col-sm-10">@Model.UserName</dd>
-    <dt class="col-sm-2">Teléfono</dt>
-    <dd class="col-sm-10">@Model.PhoneNumber</dd>
-</dl>
+<div>
+    <h4>@Model.Email</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">Email</dt>
+        <dd class="col-sm-10">@Model.Email</dd>
+        <dt class="col-sm-2">Nombre de Usuario</dt>
+        <dd class="col-sm-10">@Model.UserName</dd>
+        <dt class="col-sm-2">Rol</dt>
+        <dd class="col-sm-10">
+            @if (esAdmin)
+            {
+                <span class="badge bg-danger">Administrador</span>
+            }
+            else
+            {
+                <span class="badge bg-secondary">Usuario</span>
+            }
+        </dd>
+    </dl>
+</div>
 
-<h4 class="mt-4">Historial de Compras</h4>
-<hr />
+<h3 class="mt-4">Historial de Pedidos</h3>
 
-@if (pedidos == null || pedidos.Count == 0)
+@if (esAdmin)
 {
-    <p>Este usuario no ha realizado ninguna compra.</p>
+    <p>Los administradores no pueden realizar compras.</p>
+}
+else if (pedidos.Count == 0)
+{
+    <p>Este usuario no ha realizado pedidos.</p>
 }
 else
 {
     <table class="table">
         <thead>
             <tr>
-                <th>Pedido Id</th>
+                <th>Pedido ID</th>
                 <th>Fecha</th>
                 <th>Productos</th>
-                <th>Total</th>
-                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -41,13 +55,14 @@ else
             {
                 <tr>
                     <td>@pedido.Id</td>
-                    <td>@pedido.Fecha.ToString("g")</td>
+                    <td>@pedido.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
                     <td>
-                        @string.Join(", ", pedido.Detalles.Select(d => d.Producto?.Descripcion))
-                    </td>
-                    <td>@pedido.Detalles.Sum(d => d.Precio * d.Cantidad).ToString("C")</td>
-                    <td>
-                        <a asp-controller="Pedidos" asp-action="Details" asp-route-id="@pedido.Id">Ver Pedido</a>
+                        <ul class="list-unstyled mb-0">
+                            @foreach (var detalle in pedido.Detalles)
+                            {
+                                <li>@detalle.Producto?.Descripcion (@detalle.Cantidad x @detalle.Precio.ToString("C"))</li>
+                            }
+                        </ul>
                     </td>
                 </tr>
             }
@@ -56,5 +71,5 @@ else
 }
 
 <div>
-    <a asp-action="Index">Volver a Usuarios</a>
+    <a asp-action="Index">Volver a la lista</a>
 </div>

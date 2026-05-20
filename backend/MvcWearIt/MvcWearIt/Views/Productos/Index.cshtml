@@ -25,9 +25,6 @@
                 @Html.DisplayNameFor(model => model.PrecioCadena)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Escaparate)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Imagen)
             </th>
             <th>
@@ -55,10 +52,11 @@
                 @Html.DisplayFor(modelItem => item.PrecioCadena)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Escaparate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Imagen)
+                @{
+                    var nombreImagen = "imagen-no-disponible.jpg";
+                    if (item.Imagen != null) nombreImagen = item.Imagen;
+                }
+                <img src="~/imagenes/@nombreImagen" height="40" asp-append-version="true" />
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Categoria.Descripcion)
@@ -69,7 +67,8 @@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
+                <a asp-action="CambiarImagen" asp-route-id="@item.Id">Imagen</a>
             </td>
         </tr>
 }

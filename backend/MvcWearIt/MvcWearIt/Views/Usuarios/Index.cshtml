@@ -1,27 +1,53 @@
-@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityUser>
+@model List<(Microsoft.AspNetCore.Identity.IdentityUser User, bool EsAdmin)>
 
 @{
     ViewData["Title"] = "Usuarios";
+    var rolSeleccionado = ViewBag.RolSeleccionado as string;
 }
 
 <h1>Usuarios</h1>
+
+<p>
+    <a asp-action="CreateAdmin" class="btn btn-danger">Crear Administrador</a>
+</p>
+
+<form method="get" class="row g-3 mb-3">
+    <div class="col-auto">
+        <select name="rol" class="form-select" onchange="this.form.submit()">
+            <option value="Todos" selected="@(rolSeleccionado == "Todos")">Todos</option>
+            <option value="Administrador" selected="@(rolSeleccionado == "Administrador")">Administradores</option>
+            <option value="Usuario" selected="@(rolSeleccionado == "Usuario")">Usuarios normales</option>
+        </select>
+    </div>
+</form>
 
 <table class="table">
     <thead>
         <tr>
             <th>Email</th>
             <th>Nombre de Usuario</th>
+            <th>Rol</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var (user, esAdmin) in Model)
         {
             <tr>
-                <td>@item.Email</td>
-                <td>@item.UserName</td>
+                <td>@user.Email</td>
+                <td>@user.UserName</td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.Id">Ver Datos y Compras</a>
+                    @if (esAdmin)
+                    {
+                        <span class="badge bg-danger">Administrador</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Usuario</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@user.Id">Ver Datos</a>
                 </td>
             </tr>
         }
