@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Globalization;
 
 namespace MvcWearIt.Models
 {
     public class Producto
     {
-       
+        
         public int Id { get; set; }
 
         [Display(Name = "Nombre de la Skin")]
@@ -19,12 +20,13 @@ namespace MvcWearIt.Models
         public decimal Precio { get; set; }
 
         [Display(Name = "Precio")]
-        [RegularExpression(@"^[-0123456789]+[0-9.,]*$", ErrorMessage = "El valor introducido debe ser de tipo monetario.")]
+        [RegularExpression(@"^[0-9]+[.,]?[0-9]*$", ErrorMessage = "El valor introducido debe ser de tipo monetario.")]
         [Required(ErrorMessage = "El precio es un campo requerido")]
+        [NotMapped]
         public string PrecioCadena
         {
-            get { return Convert.ToString(Precio).Replace(',', '.'); }
-            set { Precio = Convert.ToDecimal(value.Replace('.', ',')); }
+            get { return Precio.ToString("0.00", CultureInfo.InvariantCulture); }
+            set { Precio = decimal.Parse(value.Replace(',', '.'), NumberStyles.Any, CultureInfo.InvariantCulture); }
         }
 
         public string? Imagen { get; set; }

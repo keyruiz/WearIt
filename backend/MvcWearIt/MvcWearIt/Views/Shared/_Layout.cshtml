@@ -32,15 +32,6 @@
                                     <a class="nav-link text-danger fw-bold" asp-controller="Admin" asp-action="Index">Dashboard</a>
                                 </li>*/
                             }
-                            else
-                            {
-                                <li class="nav-item ms-2">
-                                    <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index">Mis Datos</a>
-                                </li>
-                                <li class="nav-item ms-2">
-                                    <a class="nav-link text-dark" asp-controller="MisPedidos" asp-action="Index">Mis Pedidos</a>
-                                </li>
-                            }
                         }
                     </ul>
                     @if (!SignInManager.IsSignedIn(User) || !User.IsInRole("Administrador"))

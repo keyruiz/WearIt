@@ -11,13 +11,20 @@
     <a asp-action="CreateAdmin" class="btn btn-danger">Crear Administrador</a>
 </p>
 
-<form method="get" class="row g-3 mb-3">
+<form method="get" class="row g-2 mb-3">
     <div class="col-auto">
         <select name="rol" class="form-select" onchange="this.form.submit()">
             <option value="Todos" selected="@(rolSeleccionado == "Todos")">Todos</option>
             <option value="Administrador" selected="@(rolSeleccionado == "Administrador")">Administradores</option>
             <option value="Usuario" selected="@(rolSeleccionado == "Usuario")">Usuarios normales</option>
         </select>
+    </div>
+    <div class="col-auto">
+        <input type="text" name="search" class="form-control" placeholder="Buscar por nombre o email..." value="@ViewBag.Search" />
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary">Buscar</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Limpiar</a>
     </div>
 </form>
 

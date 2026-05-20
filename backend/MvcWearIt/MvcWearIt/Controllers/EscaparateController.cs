@@ -39,6 +39,7 @@ namespace MvcWearIt.Controllers
         {
              var consulta = _context.Productos
                 .Include(p => p.Categoria)
+                .Include(p => p.Juego)
                 .Where(p => p.JuegoId == juegoId);
 
             if (id == null)

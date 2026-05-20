@@ -33,7 +33,10 @@
         </table>
 
         <div class="d-flex justify-content-between mt-4">
-            <a href="/Juegos/Index" class="btn btn-outline-dark">← Seguir comprando</a>
+            <div>
+                <a href="/Juegos/Index" class="btn btn-outline-dark">← Seguir comprando</a>
+                <button id="btn-vaciar" class="btn btn-outline-danger ms-2">Vaciar Carrito</button>
+            </div>
             <button id="btn-confirmar" class="btn btn-success btn-lg fw-bold px-5" data-autenticado="@User.Identity.IsAuthenticated.ToString().ToLower()">
                 Confirmar Pedido ✓
             </button>

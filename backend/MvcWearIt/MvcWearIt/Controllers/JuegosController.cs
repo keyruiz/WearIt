@@ -51,9 +51,15 @@ namespace MvcWearIt.Controllers
         }
 
         [Authorize(Roles = "Administrador")]
-        public async Task<IActionResult> AdminIndex()
+        public async Task<IActionResult> AdminIndex(string search)
         {
-            return View(await _context.Juegos.ToListAsync());
+            var consulta = _context.Juegos.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+                consulta = consulta.Where(j => j.Nombre.Contains(search));
+
+            ViewBag.Search = search;
+            return View(await consulta.ToListAsync());
         }
 
         // GET: Juegos/Create
@@ -194,57 +200,6 @@ namespace MvcWearIt.Controllers
         private bool JuegoExists(int id)
         {
             return _context.Juegos.Any(e => e.Id == id);
-        }
-
-        [Authorize(Roles = "Administrador")]
-        public async Task<IActionResult> CambiarImagen(int? id)
-        {
-            if (id == null) return NotFound();
-            var juego = await _context.Juegos.FindAsync(id);
-            if (juego == null) return NotFound();
-            return View(juego);
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "Administrador")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CambiarImagen(int? id, IFormFile imagen)
-        {
-            if (id == null) return NotFound();
-            var juego = await _context.Juegos.FindAsync(id);
-            if (juego == null) return NotFound();
-            if (imagen == null)
-            {
-                TempData["ErrorMessage"] = "Debes seleccionar una imagen.";
-                return RedirectToAction(nameof(CambiarImagen), new { id });
-            }
-
-            if (ModelState.IsValid)
-            {
-                string strRutaImagenes = Path.Combine(_webHostEnvironment.WebRootPath, "imagenes");
-                        Directory.CreateDirectory(strRutaImagenes);
-                string strExtension = Path.GetExtension(imagen.FileName);
-                string strNombreFichero = "juego_" + juego.Id.ToString() + strExtension;
-                string strRutaFichero = Path.Combine(strRutaImagenes, strNombreFichero);
-
-                using (var fileStream = new FileStream(strRutaFichero, FileMode.Create))
-                {
-                    await imagen.CopyToAsync(fileStream);
-                }
-
-                juego.ImagenPortada = strNombreFichero;
-                try
-                {
-                    _context.Update(juego);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!JuegoExists(juego.Id)) return NotFound();
-                    else throw;
-                }
-            }
-            return RedirectToAction(nameof(AdminIndex));
         }
 
         [HttpGet]

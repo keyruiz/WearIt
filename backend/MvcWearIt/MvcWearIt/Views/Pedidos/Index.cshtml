@@ -6,13 +6,22 @@
 
 <h1>Pedidos</h1>
 
+<form method="get" class="row g-2 mb-3">
+    <div class="col-auto">
+        <input type="number" name="search" class="form-control" placeholder="Buscar por Nº Pedido..." value="@ViewBag.Search" />
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary">Buscar</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Limpiar</a>
+    </div>
+</form>
+
 <table class="table">
     <thead>
         <tr>
             <th>Nº Pedido</th>
             <th>@Html.DisplayNameFor(model => model.Fecha)</th>
-            <th>Usuario</th>
-            <th>Email</th>
+            <th>Email del Usuario</th>
             <th></th>
         </tr>
     </thead>
@@ -22,7 +31,6 @@
         <tr>
             <td>@item.Id</td>
             <td>@item.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
-            <td>@item.UserId</td>
             <td>@email</td>
             <td>
                 <a asp-action="Details" asp-route-id="@item.Id">Detalles</a>

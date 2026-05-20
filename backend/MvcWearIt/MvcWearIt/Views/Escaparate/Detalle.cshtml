@@ -38,7 +38,7 @@
             {
                 <p>@Model.Texto</p>
             }
-            <button class="btn btn-primary btn-lg boton-carrito" data-id="@Model.Id" data-descripcion="@Model.Descripcion" data-precio="@Model.Precio" data-imagen="@Model.Imagen">
+            <button class="btn btn-primary btn-lg boton-carrito" data-id="@Model.Id" data-descripcion="@Model.Descripcion" data-precio="@(Model.Precio.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture))" data-imagen="@Model.Imagen" data-juego-id="@Model.JuegoId" data-juego-nombre="@(Model.Juego?.Nombre)">
                 Añadir al Carrito
             </button>
             <a href="/Escaparate?juegoId=@juegoId" class="btn btn-outline-secondary btn-lg ms-2">Volver</a>
@@ -53,9 +53,11 @@
             const producto = {
                 id: parseInt(btn.dataset.id),
                 descripcion: btn.dataset.descripcion,
-                precio: parseFloat(btn.dataset.precio),
+                precio: parseFloat((btn.dataset.precio || "").replace(",", ".")),
                 cantidad: 1,
-                imagen: btn.dataset.imagen || ""
+                imagen: btn.dataset.imagen || "",
+                juegoId: parseInt(btn.dataset.juegoId),
+                juegoNombre: btn.dataset.juegoNombre || "General"
             };
 
             let carrito = JSON.parse(localStorage.getItem("carrito")) || [];

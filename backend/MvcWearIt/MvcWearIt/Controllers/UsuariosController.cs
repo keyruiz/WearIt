@@ -26,9 +26,15 @@ namespace MvcWearIt.Controllers
             _roleManager = roleManager;
         }
 
-        public async Task<IActionResult> Index(string rol)
+        public async Task<IActionResult> Index(string rol, string search)
         {
-            var usuarios = await _context.Users.ToListAsync();
+            var usuariosQuery = _context.Users.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+                usuariosQuery = usuariosQuery.Where(u =>
+                    u.UserName.Contains(search) || u.Email.Contains(search));
+
+            var usuarios = await usuariosQuery.ToListAsync();
             var usuariosConRoles = new List<(IdentityUser User, bool EsAdmin)>();
 
             foreach (var user in usuarios)
@@ -43,6 +49,7 @@ namespace MvcWearIt.Controllers
             }
 
             ViewBag.RolSeleccionado = rol ?? "Todos";
+            ViewBag.Search = search;
             return View(usuariosConRoles);
         }
 

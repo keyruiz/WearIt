@@ -30,5 +30,21 @@ namespace MvcWearIt.Controllers
 
             return View(pedidos);
         }
+
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var userId = _userManager.GetUserId(User);
+
+            var pedido = await _context.Pedidos
+                .Include(p => p.Detalles)
+                .ThenInclude(d => d.Producto)
+                .FirstOrDefaultAsync(p => p.Id == id && p.UserId == userId);
+
+            if (pedido == null) return NotFound();
+
+            return View(pedido);
+        }
     }
 }

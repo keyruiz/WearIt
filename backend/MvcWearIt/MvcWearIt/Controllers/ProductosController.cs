@@ -25,10 +25,15 @@ namespace MvcWearIt.Controllers
         }
 
         // GET: Productos
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string search)
         {
-            var mvcWearItContexto = _context.Productos.Include(p => p.Categoria).Include(p => p.Juego);
-            return View(await mvcWearItContexto.ToListAsync());
+            IQueryable<Producto> consulta = _context.Productos.Include(p => p.Categoria).Include(p => p.Juego);
+
+            if (!string.IsNullOrWhiteSpace(search))
+                consulta = consulta.Where(p => p.Descripcion.Contains(search));
+
+            ViewBag.Search = search;
+            return View(await consulta.ToListAsync());
         }
 
         // GET: Productos/Details/5

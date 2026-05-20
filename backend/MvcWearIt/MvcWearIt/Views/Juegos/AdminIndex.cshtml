@@ -10,6 +10,16 @@
     <a asp-action="Create" class="btn btn-primary">Crear Nuevo Juego</a>
 </p>
 
+<form method="get" class="row g-2 mb-3">
+    <div class="col-auto">
+        <input type="text" name="search" class="form-control" placeholder="Buscar por nombre..." value="@ViewBag.Search" />
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary">Buscar</button>
+        <a asp-action="AdminIndex" class="btn btn-outline-secondary">Limpiar</a>
+    </div>
+</form>
+
 <table class="table">
     <thead>
         <tr>
@@ -28,7 +38,6 @@
                     <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
                     <a asp-action="Productos" asp-route-id="@item.Id">Ver Productos</a> |
                     <a asp-action="Details" asp-route-id="@item.Id">Detalles</a> |
-                    <a asp-action="CambiarImagen" asp-route-id="@item.Id">Imagen</a> |
                     <a asp-action="Delete" asp-route-id="@item.Id">Eliminar</a>
                 </td>
             </tr>

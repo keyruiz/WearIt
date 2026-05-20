@@ -25,19 +25,25 @@ namespace MvcWearIt.Controllers
         }
 
         // GET: Pedidos
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? search)
         {
-            var pedidos = await _context.Pedidos
-                .OrderByDescending(p => p.Fecha)
-                .ToListAsync();
+            var pedidos = _context.Pedidos.AsQueryable();
 
-            var userIds = pedidos.Where(p => p.UserId != null).Select(p => p.UserId).Distinct().ToList();
+            if (search.HasValue)
+                pedidos = pedidos.Where(p => p.Id == search.Value);
+
+            pedidos = pedidos.OrderByDescending(p => p.Fecha);
+
+            var lista = await pedidos.ToListAsync();
+
+            var userIds = lista.Where(p => p.UserId != null).Select(p => p.UserId).Distinct().ToList();
             var usuarios = await _identityContext.Users
                 .Where(u => userIds.Contains(u.Id))
                 .ToDictionaryAsync(u => u.Id, u => u.Email);
 
             ViewBag.Usuarios = usuarios;
-            return View(pedidos);
+            ViewBag.Search = search;
+            return View(lista);
         }
 
         // GET: Pedidos/Details/5

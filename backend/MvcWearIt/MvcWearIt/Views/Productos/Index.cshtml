@@ -9,6 +9,17 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+<form method="get" class="row g-2 mb-3">
+    <div class="col-auto">
+        <input type="text" name="search" class="form-control" placeholder="Buscar por nombre..." value="@ViewBag.Search" />
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary">Buscar</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Limpiar</a>
+    </div>
+</form>
+
 <table class="table">
     <thead>
         <tr>
@@ -20,9 +31,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Precio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PrecioCadena)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Imagen)
@@ -49,9 +57,6 @@
                 @Html.DisplayFor(modelItem => item.Precio)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PrecioCadena)
-            </td>
-            <td>
                 @{
                     var nombreImagen = "imagen-no-disponible.jpg";
                     if (item.Imagen != null) nombreImagen = item.Imagen;
@@ -68,7 +73,6 @@
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
-                <a asp-action="CambiarImagen" asp-route-id="@item.Id">Imagen</a>
             </td>
         </tr>
 }

@@ -1,4 +1,4 @@
-﻿@model MvcWearIt.Models.Pedido
+@model MvcWearIt.Models.Pedido
 
 @{
     ViewData["Title"] = "Detalles del Pedido";
@@ -13,8 +13,6 @@
         <dd class="col-sm-10">@Model.Id</dd>
         <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Fecha)</dt>
         <dd class="col-sm-10">@Model.Fecha.ToString("dd/MM/yyyy HH:mm")</dd>
-        <dt class="col-sm-2">Email del Usuario</dt>
-        <dd class="col-sm-10">@ViewBag.UserEmail</dd>
         <dt class="col-sm-2">Total del Pedido</dt>
         <dd class="col-sm-10 fw-bold text-success">@Model.Detalles.Sum(d => d.Cantidad * d.Precio).ToString("C")</dd>
     </dl>
@@ -50,5 +48,5 @@
 </table>
 
 <div>
-    <a asp-action="Index">Volver a la lista</a>
+    <a asp-action="Index">Volver a Mis Pedidos</a>
 </div>

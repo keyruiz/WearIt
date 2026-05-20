@@ -7,7 +7,7 @@ function pintarCarrito() {
     const contenedorVacio = document.getElementById("carrito-vacio");
     const contenedorDatos = document.getElementById("carrito-con-datos");
     const cuerpoTabla = document.getElementById("cuerpo-carrito");
-    const molde = document.getElementById("plantilla-fila-carrito");
+    const moldeFila = document.getElementById("plantilla-fila-carrito");
     const txtTotal = document.getElementById("total-carrito");
 
     cuerpoTabla.innerHTML = '';
@@ -21,43 +21,68 @@ function pintarCarrito() {
     contenedorVacio.classList.add("d-none");
     contenedorDatos.classList.remove("d-none");
 
-    let total = 0;
-
-    carrito.forEach((item, indice) => {
-        const subtotal = item.precio * item.cantidad;
-        total += subtotal;
-
-        const clon = molde.content.cloneNode(true);
-        clon.querySelector(".prod-descripcion").textContent = item.descripcion;
-        clon.querySelector(".prod-imagen").src = item.imagen ? `/imagenes/${item.imagen}` : "/imagenes/imagen-no-disponible.jpg";
-        clon.querySelector(".prod-precio").textContent = `${item.precio.toFixed(2)} €`;
-        clon.querySelector(".prod-cantidad").textContent = item.cantidad;
-        clon.querySelector(".prod-subtotal").textContent = `${subtotal.toFixed(2)} €`;
-
-        clon.querySelector(".btn-mas").onclick = () => {
-            carrito[indice].cantidad++;
-            actualizarYRefrescar(carrito);
-        };
-
-        clon.querySelector(".btn-menos").onclick = () => {
-            if (carrito[indice].cantidad > 1) {
-                carrito[indice].submit;
-                carrito[indice].cantidad--;
-                actualizarYRefrescar(carrito);
-            }
-        };
-
-        clon.querySelector(".btn-eliminar").onclick = () => {
-            carrito.splice(indice, 1);
-            actualizarYRefrescar(carrito);
-        };
-
-        cuerpoTabla.appendChild(clon);
+    const grupos = {};
+    carrito.forEach(item => {
+        const juego = item.juegoNombre || "General";
+        if (!grupos[juego]) grupos[juego] = [];
+        grupos[juego].push(item);
     });
 
-    txtTotal.textContent = `${total.toFixed(2)} €`;
+    let totalGlobal = 0;
 
-    // CONTROL DE SEGURIDAD PARA ANÓNIMOS
+    Object.keys(grupos).forEach(nombreJuego => {
+        const items = grupos[nombreJuego];
+
+        const filaHeader = document.createElement("tr");
+        filaHeader.className = "table-info text-center fw-bold";
+        filaHeader.innerHTML = `<td colspan="6">${nombreJuego}</td>`;
+        cuerpoTabla.appendChild(filaHeader);
+
+        let subtotalJuego = 0;
+
+        items.forEach(item => {
+            const precio = Number(item.precio);
+            const subtotal = precio * item.cantidad;
+            subtotalJuego += subtotal;
+
+            const clon = moldeFila.content.cloneNode(true);
+            clon.querySelector(".prod-descripcion").textContent = item.descripcion;
+            clon.querySelector(".prod-imagen").src = item.imagen ? `/imagenes/${item.imagen}` : "/imagenes/imagen-no-disponible.jpg";
+            clon.querySelector(".prod-precio").textContent = `${precio.toFixed(2)} €`;
+            clon.querySelector(".prod-cantidad").textContent = item.cantidad;
+            clon.querySelector(".prod-subtotal").textContent = `${subtotal.toFixed(2)} €`;
+
+            const indiceReal = carrito.indexOf(item);
+            clon.querySelector(".btn-mas").onclick = () => {
+                carrito[indiceReal].cantidad++;
+                actualizarYRefrescar(carrito);
+            };
+
+            clon.querySelector(".btn-menos").onclick = () => {
+                if (carrito[indiceReal].cantidad > 1) {
+                    carrito[indiceReal].cantidad--;
+                    actualizarYRefrescar(carrito);
+                }
+            };
+
+            clon.querySelector(".btn-eliminar").onclick = () => {
+                carrito.splice(indiceReal, 1);
+                actualizarYRefrescar(carrito);
+            };
+
+            cuerpoTabla.appendChild(clon);
+        });
+
+        const filaSubtotal = document.createElement("tr");
+        filaSubtotal.className = "table-secondary fw-bold";
+        filaSubtotal.innerHTML = `<td colspan="4" class="text-end">Subtotal ${nombreJuego}:</td><td class="text-end">${subtotalJuego.toFixed(2)} €</td><td></td>`;
+        cuerpoTabla.appendChild(filaSubtotal);
+
+        totalGlobal += subtotalJuego;
+    });
+
+    txtTotal.textContent = `${totalGlobal.toFixed(2)} €`;
+
     const btnConfirmar = document.getElementById("btn-confirmar");
     btnConfirmar.onclick = async () => {
         const estaAutenticado = btnConfirmar.getAttribute("data-autenticado") === "true";
@@ -72,7 +97,7 @@ function pintarCarrito() {
             productoId: item.id,
             cantidad: item.cantidad,
             descripcion: item.descripcion,
-            precio: item.precio
+            precio: Number(item.precio)
         }));
 
         try {
@@ -95,6 +120,16 @@ function pintarCarrito() {
             console.error(err);
         }
     };
+
+    const btnVaciar = document.getElementById("btn-vaciar");
+    if (btnVaciar) {
+        btnVaciar.onclick = () => {
+            if (confirm("¿Estás seguro de que quieres vaciar el carrito?")) {
+                localStorage.removeItem("carrito");
+                pintarCarrito();
+            }
+        };
+    }
 }
 
 function actualizarYRefrescar(nuevoCarrito) {
