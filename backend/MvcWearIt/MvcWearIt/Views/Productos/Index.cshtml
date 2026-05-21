@@ -1,16 +1,22 @@
 ﻿@model IEnumerable<MvcWearIt.Models.Producto>
+@using Microsoft.AspNetCore.Mvc.Rendering
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Productos";
 }
 
-<h1>Index</h1>
+<h1>Productos</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
 
 <form method="get" class="row g-2 mb-3">
+    <div class="col-auto">
+        <select name="juegoId" class="form-select" asp-items="ViewBag.Juegos">
+            <option value="">Todos los juegos</option>
+        </select>
+    </div>
     <div class="col-auto">
         <input type="text" name="search" class="form-control" placeholder="Buscar por nombre..." value="@ViewBag.Search" />
     </div>

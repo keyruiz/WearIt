@@ -25,14 +25,19 @@ namespace MvcWearIt.Controllers
         }
 
         // GET: Productos
-        public async Task<IActionResult> Index(string search)
+        public async Task<IActionResult> Index(string search, int? juegoId)
         {
             IQueryable<Producto> consulta = _context.Productos.Include(p => p.Categoria).Include(p => p.Juego);
 
             if (!string.IsNullOrWhiteSpace(search))
                 consulta = consulta.Where(p => p.Descripcion.Contains(search));
 
+            if (juegoId.HasValue && juegoId.Value > 0)
+                consulta = consulta.Where(p => p.JuegoId == juegoId.Value);
+
             ViewBag.Search = search;
+            ViewBag.JuegoId = juegoId;
+            ViewBag.Juegos = new SelectList(await _context.Juegos.OrderBy(j => j.Nombre).ToListAsync(), "Id", "Nombre", juegoId);
             return View(await consulta.ToListAsync());
         }
 

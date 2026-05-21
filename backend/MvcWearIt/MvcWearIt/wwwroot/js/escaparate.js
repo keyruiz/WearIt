@@ -4,6 +4,8 @@
 
     const inputBuscar = document.getElementById("buscador-productos");
     let productosCache = [];
+    let paginaActual = 1;
+    const itemsPorPagina = 12;
 
     function renderizarProductos(productos) {
         const contenedor = document.getElementById("contenedor-productos");
@@ -20,7 +22,14 @@
             return;
         }
 
-        filtrados.forEach(prod => {
+        const totalPaginas = Math.ceil(filtrados.length / itemsPorPagina);
+        if (paginaActual > totalPaginas) paginaActual = totalPaginas;
+
+        const inicio = (paginaActual - 1) * itemsPorPagina;
+        const fin = inicio + itemsPorPagina;
+        const paginaItems = filtrados.slice(inicio, fin);
+
+        paginaItems.forEach(prod => {
             const clon = molde.content.cloneNode(true);
 
             clon.querySelector(".producto-descripcion").textContent = prod.descripcion;
@@ -61,6 +70,36 @@
 
             contenedor.appendChild(clon);
         });
+
+        if (totalPaginas > 1) {
+            const nav = document.createElement("div");
+            nav.className = "col-12 d-flex justify-content-center mt-3";
+            nav.innerHTML = `
+                <nav>
+                    <ul class="pagination">
+                        <li class="page-item ${paginaActual <= 1 ? 'disabled' : ''}">
+                            <a class="page-link" href="#" data-pagina="${paginaActual - 1}">&laquo;</a>
+                        </li>
+                        ${Array.from({ length: totalPaginas }, (_, i) => i + 1).map(p => `
+                            <li class="page-item ${p === paginaActual ? 'active' : ''}">
+                                <a class="page-link" href="#" data-pagina="${p}">${p}</a>
+                            </li>
+                        `).join('')}
+                        <li class="page-item ${paginaActual >= totalPaginas ? 'disabled' : ''}">
+                            <a class="page-link" href="#" data-pagina="${paginaActual + 1}">&raquo;</a>
+                        </li>
+                    </ul>
+                </nav>
+            `;
+            nav.querySelectorAll("[data-pagina]").forEach(link => {
+                link.onclick = (e) => {
+                    e.preventDefault();
+                    paginaActual = parseInt(link.dataset.pagina);
+                    renderizarProductos(productosCache);
+                };
+            });
+            contenedor.appendChild(nav);
+        }
     }
 
     function cargarProductosEscaparate(juegoId, categoriaId) {
@@ -76,10 +115,14 @@
             })
             .then(productos => {
                 productosCache = productos;
+                paginaActual = 1;
                 renderizarProductos(productosCache);
 
                 if (inputBuscar) {
-                    inputBuscar.addEventListener("input", () => renderizarProductos(productosCache));
+                    inputBuscar.addEventListener("input", () => {
+                        paginaActual = 1;
+                        renderizarProductos(productosCache);
+                    });
                 }
             })
             .catch(err => console.error("Error en el fetch del escaparate:", err));
