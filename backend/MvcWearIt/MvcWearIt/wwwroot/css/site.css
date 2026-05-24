@@ -40,3 +40,88 @@ footer {
 .columna-footer {
     margin: 3%;
 }
+
+/* --- HEADER FLEXBOX --- */
+.main-header {
+    background-color: #4354f5;
+    color: #ffffff;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.header-logo {
+    color: #ffffff;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* Contenedor derecho: alinea todo el menú en una fila fluida */
+.header-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem; /* Espaciado regular en rem entre botones y enlaces */
+}
+
+.nav-link {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1rem;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+    .nav-link:hover {
+        text-decoration: underline;
+    }
+
+/* --- BOTÓN DEL CARRITO RESPONSIVO --- */
+.btn-cart {
+    background-color: #f0a241;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    font-weight: bold;
+    color: #000000;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 0.25rem;
+    display: inline-flex;
+    align-items: center;
+    position: relative; /* Base para posicionar el badge rojo encima */
+}
+
+/* El círculo rojo de notificaciones del carrito */
+.cart-badge {
+    position: absolute;
+    top: -0.5rem;
+    right: -0.5rem;
+    background-color: #dc3545; /* Rojo de alerta */
+    color: #ffffff;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 50rem; /* Forma de píldora perfecta */
+    font-weight: bold;
+}
+
+/* --- LOGOUT Y FORMULARIOS INLINE --- */
+.logout-inline-form {
+    display: inline;
+    margin: 0;
+    padding: 0;
+}
+
+.btn-logout {
+    font-weight: 500;
+}
+
+/* Enlace especial para resaltar el Dashboard del Admin */
+.dashboard-link {
+    color: #ffc107; /* Tono dorado/amarillo para diferenciarlo */
+    font-weight: bold;
+}

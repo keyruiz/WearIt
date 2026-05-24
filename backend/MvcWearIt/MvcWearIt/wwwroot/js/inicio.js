@@ -19,10 +19,18 @@ function cargarJuegosPortada() {
             juegos.forEach(juego => {
                 const tarjetaClonada = molde.content.cloneNode(true);
 
+                // 1. Ponemos el nombre del juego
                 tarjetaClonada.querySelector(".nombre-juego").textContent = juego.nombre;
 
-                const tarjetaElemento = tarjetaClonada.querySelector(".tarjeta-juego");
+                // 2. Buscamos la etiqueta img y le encasquetamos la url que viene del servidor
+                // (JavaScript en los navegadores es case-sensitive: asegúrate de si es juego.imagenPortada o juego.imagen_portada)
+                const imgElemento = tarjetaClonada.querySelector(".img-portada-fondo");
+                if (juego.imagenPortada) {
+                    imgElemento.src = juego.imagenPortada;
+                }
 
+                // 3. Configurar clic
+                const tarjetaElemento = tarjetaClonada.querySelector(".tarjeta-juego");
                 tarjetaElemento.onclick = () => {
                     window.location.href = `/Escaparate?juegoId=${juego.id}`;
                 };

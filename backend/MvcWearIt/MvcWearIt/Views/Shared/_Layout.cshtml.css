@@ -17,6 +17,8 @@ a {
   border-color: #1861ac;
 }
 
+
+
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
   color: #fff;
   background-color: #1b6ec2;
@@ -39,10 +41,73 @@ button.accept-policy {
   line-height: inherit;
 }
 
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px;
+.btn-cart {
+    color:black;
 }
+
+.main-footer {
+    background-color: #1e2d3b;
+    color: #ffffff;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    width: 100%;
+    flex-shrink: 0;
+    box-sizing: border-box;
+}
+
+
+.footer-columns-container {
+    display: flex;
+    flex-direction: row; 
+    justify-content: space-between;
+    align-items: flex-start; 
+    width: 85%; 
+    max-width: 75rem; 
+    margin-left: auto; 
+    margin-right: auto;
+}
+
+.footer-section {
+    width: 30%; 
+    box-sizing: border-box;
+}
+
+    .footer-section h4 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        margin-top: 0;
+        margin-bottom: 1.25rem;
+        color: #ffffff;
+        text-transform: uppercase; 
+        letter-spacing: 0.05rem;
+    }
+
+    .footer-section p {
+        font-size: 0.95rem;
+        line-height: 1.5;
+        color: #cbd5e1; 
+        margin: 0;
+    }
+
+    .footer-section ul {
+        list-style: none; 
+        padding: 0;
+        margin: 0;
+    }
+
+    .footer-section li {
+        font-size: 0.95rem;
+        margin-bottom: 0.75rem; 
+        color: #cbd5e1;
+    }
+
+    .footer-section a {
+        color: #cbd5e1;
+        text-decoration: none; 
+        transition: color 0.2s ease;
+    }
+
+    .footer-section a:hover {
+        color: #ffffff;
+        text-decoration: underline; 
+    }
