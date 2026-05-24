@@ -32,7 +32,7 @@ public class CarritoController : Controller
 
         var pedido = new Pedido
         {
-            Fecha = DateTime.Now,
+            Fecha = DateTime.UtcNow,
             UserId = userId,
             UserEmail = email
         };

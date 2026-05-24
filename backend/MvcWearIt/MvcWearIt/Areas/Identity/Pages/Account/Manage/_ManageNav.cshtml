@@ -2,6 +2,27 @@
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }
+
+<style>
+    .nav-pills .nav-link {
+        color: #000000 !important; /* El color negro */
+        font-weight: 500;
+        transition: background-color 0.2s, color 0.2s;
+    }
+
+        /* Controla cómo se ve cuando pasas el ratón por encima (Hover) */
+        .nav-pills .nav-link:hover {
+            background-color: #f0f0f0 !important; /* Un gris muy sutil de fondo */
+            color: #000000 !important;
+        }
+
+        /* Respeta el botón que está seleccionado actualmente (el azul de Profile) */
+        .nav-pills .nav-link.active {
+            background-color: #0d6efd !important; /* El azul oficial de Bootstrap */
+            color: #ffffff !important; /* Texto blanco solo para la opción activa */
+        }
+</style>
+
 <ul class="nav nav-pills flex-column">
     <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Profile</a></li>
     <li class="nav-item"><a class="nav-link @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email">Email</a></li>
