@@ -8,7 +8,7 @@ function cargarJuegosPortada() {
             if (!response.ok) {
                 throw new Error("No se pudo obtener la lista de juegos");
             }
-            return response.json(); 
+            return response.json();
         })
         .then(juegos => {
             const contenedor = document.getElementById("contenedor-juegos");
@@ -19,18 +19,16 @@ function cargarJuegosPortada() {
             juegos.forEach(juego => {
                 const tarjetaClonada = molde.content.cloneNode(true);
 
-                // 1. Ponemos el nombre del juego
                 tarjetaClonada.querySelector(".nombre-juego").textContent = juego.nombre;
 
-                // 2. Buscamos la etiqueta img y le encasquetamos la url que viene del servidor
-                // (JavaScript en los navegadores es case-sensitive: asegúrate de si es juego.imagenPortada o juego.imagen_portada)
-                const imgElemento = tarjetaClonada.querySelector(".img-portada-fondo");
+                const tarjetaElemento = tarjetaClonada.querySelector(".tarjeta-juego");
+
                 if (juego.imagenPortada) {
-                    imgElemento.src = juego.imagenPortada;
+                    tarjetaElemento.style.backgroundImage = `url('${juego.imagenPortada}')`;
+                } else {
+                    tarjetaElemento.style.backgroundColor = juego.colorHex || "#333";
                 }
 
-                // 3. Configurar clic
-                const tarjetaElemento = tarjetaClonada.querySelector(".tarjeta-juego");
                 tarjetaElemento.onclick = () => {
                     window.location.href = `/Escaparate?juegoId=${juego.id}`;
                 };

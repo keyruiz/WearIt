@@ -45,6 +45,16 @@ button.accept-policy {
     color:black;
 }
 
+main {
+    display: block;
+    width: 90%; 
+    max-width: 75rem; 
+    margin: 0 auto; 
+    padding-top: 2.5rem; 
+    padding-bottom: 4rem; 
+    box-sizing: border-box; 
+}
+
 .main-footer {
     background-color: #1e2d3b;
     color: #ffffff;

@@ -2,47 +2,151 @@
     ViewData["Title"] = "Panel de Administración";
 }
 
-<h1 class="mb-4">Dashboard</h1>
+<style>
+    /* ==========================================================================
+       PANEL DE ADMINISTRACIÓN: PATRÓN 2x2
+       ========================================================================== */
 
-<div class="row g-4">
-    <div class="col-md-3">
-        <a asp-controller="Usuarios" asp-action="Index" class="text-decoration-none">
-            <div class="card text-white bg-primary h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <h2 class="card-title display-6">@ViewBag.UsuariosCount</h2>
-                    <p class="card-text fs-5">Usuarios</p>
-                </div>
+    /* Contenedor principal del panel */
+    .admin-dashboard-container {
+        width: 90%;
+        max-width: 65rem; /* Evita que se estire demasiado horizontalmente */
+        margin: 3rem auto;
+        font-family: system-ui, -apple-system, sans-serif;
+        box-sizing: border-box;
+    }
+
+    /* Título superior izquierdo */
+    .dashboard-main-title {
+        font-size: 2rem;
+        font-weight: 500;
+        color: #000000;
+        margin-bottom: 2rem;
+        padding-left: 0.5rem;
+    }
+
+    /* La rejilla principal: Fuerza el formato de 2 filas y 2 columnas */
+    .dashboard-grid-2x2 {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.8rem; /* Separación exacta entre los bloques */
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Estilo base para los enlaces de las tarjetas */
+    .admin-card-link {
+        text-decoration: none;
+        width: 100%;
+        aspect-ratio: 1.7 / 1; /* Mantiene la proporción rectangular exacta de tu boceto */
+        border-radius: 1.2rem; /* Esquinas muy redondeadas */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: transform 0.2s ease, filter 0.2s ease;
+    }
+
+        .admin-card-link:hover {
+            transform: scale(1.02); /* Pequeño efecto dinámico al pasar el cursor */
+            filter: brightness(0.95);
+        }
+
+    /* Contenedor del texto dentro de la tarjeta */
+    .admin-card-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.3rem;
+        color: #ffffff; /* Texto blanco por defecto */
+    }
+
+    /* El número del contador (grande y legible) */
+    .card-number {
+        font-size: 3rem;
+        font-weight: bold;
+        line-height: 1;
+    }
+
+    /* La etiqueta inferior */
+    .card-label {
+        font-size: 1.25rem;
+        font-weight: 500;
+    }
+
+    /* --- PALETA DE COLORES EXACTA DE TU IMAGEN --- */
+
+    .card-green {
+        background-color: #2e7d32; /* Verde bosque mate */
+    }
+
+    .card-maroon {
+        background-color: #8c2727; /* Granate / Rojo vino */
+    }
+
+    .card-yellow {
+        background-color: #e5cd4c; /* Amarillo mostaza */
+    }
+        /* Cambiamos el texto a oscuro en la tarjeta amarilla para que sea legible */
+        .card-yellow .admin-card-content {
+            color: #1a1a1a;
+        }
+
+    .card-darkblue {
+        background-color: #1f4e79; /* Azul oscuro / Azul naval */
+    }
+
+    /* ==========================================================================
+       RESPONSIVE: Adaptación para móviles
+       ========================================================================== */
+    @@media (max-width: 40rem) { /* Menos de 640px */
+        .dashboard-grid-2x2
+
+    {
+        /* En pantallas pequeñas colapsa a 1 sola columna para que no se aplaste el texto */
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+    }
+
+    .admin-card-link {
+        aspect-ratio: 2 / 1; /* Se vuelve un poco más achatada en smartphones */
+    }
+
+    }
+</style>
+
+<main class="admin-dashboard-container">
+    <h1 class="dashboard-main-title">Dashboard</h1>
+
+    <div class="dashboard-grid-2x2">
+
+        <a asp-controller="Usuarios" asp-action="Index" class="admin-card-link card-green">
+            <div class="admin-card-content">
+                <span class="card-number">@ViewBag.UsuariosCount</span>
+                <span class="card-label">Usuarios</span>
             </div>
         </a>
-    </div>
-    <div class="col-md-3">
-        <a asp-controller="Juegos" asp-action="AdminIndex" class="text-decoration-none">
-            <div class="card text-white bg-success h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <h2 class="card-title display-6">@ViewBag.JuegosCount</h2>
-                    <p class="card-text fs-5">Juegos</p>
-                </div>
+
+        <a asp-controller="Juegos" asp-action="AdminIndex" class="admin-card-link card-maroon">
+            <div class="admin-card-content">
+                <span class="card-number">@ViewBag.JuegosCount</span>
+                <span class="card-label">Juegos</span>
             </div>
         </a>
-    </div>
-    <div class="col-md-3">
-        <a asp-controller="Productos" asp-action="Index" class="text-decoration-none">
-            <div class="card text-white bg-warning h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <h2 class="card-title display-6">@ViewBag.ProductosCount</h2>
-                    <p class="card-text fs-5">Productos</p>
-                </div>
+
+        <a asp-controller="Productos" asp-action="Index" class="admin-card-link card-yellow">
+            <div class="admin-card-content">
+                <span class="card-number">@ViewBag.ProductosCount</span>
+                <span class="card-label">Productos</span>
             </div>
         </a>
-    </div>
-    <div class="col-md-3">
-        <a asp-controller="Pedidos" asp-action="Index" class="text-decoration-none">
-            <div class="card text-white bg-danger h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <h2 class="card-title display-6">@ViewBag.PedidosCount</h2>
-                    <p class="card-text fs-5">Pedidos</p>
-                </div>
+
+        <a asp-controller="Pedidos" asp-action="Index" class="admin-card-link card-darkblue">
+            <div class="admin-card-content">
+                <span class="card-number">@ViewBag.PedidosCount</span>
+                <span class="card-label">Pedidos</span>
             </div>
         </a>
+
     </div>
-</div>
+</main>
