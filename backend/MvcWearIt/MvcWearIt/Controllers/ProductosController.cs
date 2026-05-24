@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -140,7 +141,6 @@ namespace MvcWearIt.Controllers
                         productoExistente.Imagen = imagenUrl;
                     }
 
-                    _context.Update(productoExistente);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
