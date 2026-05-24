@@ -1,4 +1,10 @@
-﻿document.addEventListener("DOMContentLoaded", () => {
+﻿function urlImagen(imagen) {
+    if (!imagen) return "/imagenes/imagen-no-disponible.jpg";
+    if (imagen.startsWith("http://") || imagen.startsWith("https://")) return imagen;
+    return "/imagenes/" + imagen;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
     const juegoId = document.getElementById("hdnJuegoId").value;
     const categoriaId = document.getElementById("hdnCategoriaId").value;
 
@@ -35,7 +41,7 @@
             clon.querySelector(".producto-descripcion").textContent = prod.descripcion;
             clon.querySelector(".producto-categoria").textContent = prod.categoria ? prod.categoria.descripcion : "General";
             clon.querySelector(".producto-precio").textContent = `${Number(prod.precio).toFixed(2)} €`;
-            clon.querySelector(".producto-imagen").src = prod.imagen ? `/imagenes/${prod.imagen}` : "/imagenes/imagen-no-disponible.jpg";
+            clon.querySelector(".producto-imagen").src = urlImagen(prod.imagen);
 
             const botonCarrito = clon.querySelector(".boton-carrito");
             botonCarrito.onclick = (e) => {

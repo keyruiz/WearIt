@@ -27,7 +27,18 @@
             @Html.DisplayNameFor(model => model.ImagenPortada)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImagenPortada)
+            @{
+                var esUrl = Model.ImagenPortada != null && (Model.ImagenPortada.StartsWith("http://") || Model.ImagenPortada.StartsWith("https://"));
+            }
+            @if (esUrl)
+            {
+                <img src="@Model.ImagenPortada" height="100" />
+            }
+            else
+            {
+                var nombreImagen = Model.ImagenPortada ?? "imagen-no-disponible.jpg";
+                <img src="~/imagenes/@nombreImagen" height="100" asp-append-version="true" />
+            }
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.ColorHex)

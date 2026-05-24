@@ -1,4 +1,10 @@
-﻿document.addEventListener("DOMContentLoaded", () => {
+﻿function urlImagen(imagen) {
+    if (!imagen) return "/imagenes/imagen-no-disponible.jpg";
+    if (imagen.startsWith("http://") || imagen.startsWith("https://")) return imagen;
+    return "/imagenes/" + imagen;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
     pintarCarrito();
 });
 
@@ -47,7 +53,7 @@ function pintarCarrito() {
 
             const clon = moldeFila.content.cloneNode(true);
             clon.querySelector(".prod-descripcion").textContent = item.descripcion;
-            clon.querySelector(".prod-imagen").src = item.imagen ? `/imagenes/${item.imagen}` : "/imagenes/imagen-no-disponible.jpg";
+            clon.querySelector(".prod-imagen").src = urlImagen(item.imagen);
             clon.querySelector(".prod-precio").textContent = `${precio.toFixed(2)} €`;
             clon.querySelector(".prod-cantidad").textContent = item.cantidad;
             clon.querySelector(".prod-subtotal").textContent = `${subtotal.toFixed(2)} €`;

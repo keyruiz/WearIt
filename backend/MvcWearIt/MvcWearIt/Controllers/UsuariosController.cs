@@ -78,6 +78,75 @@ namespace MvcWearIt.Controllers
             return View();
         }
 
+        public async Task<IActionResult> ChangeRole(string id)
+        {
+            if (id == null) return NotFound();
+
+            var user = await _context.Users.FindAsync(id);
+            if (user == null) return NotFound();
+
+            if (user.Id == _userManager.GetUserId(User))
+            {
+                TempData["ErrorMessage"] = "No puedes cambiar tu propio rol.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            var esAdmin = await _userManager.IsInRoleAsync(user, "Administrador");
+            ViewBag.EsAdmin = esAdmin;
+            ViewBag.UserId = user.Id;
+            ViewBag.UserName = user.UserName;
+            ViewBag.UserEmail = user.Email;
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangeRole(string id, string nuevoRol)
+        {
+            if (id == null) return NotFound();
+
+            var user = await _context.Users.FindAsync(id);
+            if (user == null) return NotFound();
+
+            if (user.Id == _userManager.GetUserId(User))
+            {
+                TempData["ErrorMessage"] = "No puedes cambiar tu propio rol.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (nuevoRol != "Administrador" && nuevoRol != "Usuario")
+            {
+                TempData["ErrorMessage"] = "Rol no válido.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            var esAdmin = await _userManager.IsInRoleAsync(user, "Administrador");
+            var esUsuario = await _userManager.IsInRoleAsync(user, "Usuario");
+
+            if (nuevoRol == "Administrador" && esAdmin)
+            {
+                TempData["ErrorMessage"] = $"El usuario '{user.UserName}' ya es Administrador.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (nuevoRol == "Usuario" && !esAdmin)
+            {
+                TempData["ErrorMessage"] = $"El usuario '{user.UserName}' ya es Usuario.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (esAdmin)
+                await _userManager.RemoveFromRoleAsync(user, "Administrador");
+            if (esUsuario)
+                await _userManager.RemoveFromRoleAsync(user, "Usuario");
+
+            await _userManager.AddToRoleAsync(user, nuevoRol);
+
+            TempData["SuccessMessage"] = $"Rol de '{user.UserName}' cambiado a {nuevoRol} correctamente.";
+            return RedirectToAction(nameof(Index));
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateAdmin(string userName, string email, string password)

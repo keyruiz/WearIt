@@ -6,51 +6,34 @@
 
 <h1>Cambiar imagen</h1>
 
-<div>
-    <h4>Producto</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">@Html.DisplayNameFor(m => m.Descripcion)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(m => m.Descripcion)</dd>
-        <dt class="col-sm-2">@Html.DisplayNameFor(m => m.Precio)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(m => m.Precio)</dd>
-        <dt class="col-sm-2">@Html.DisplayNameFor(m => m.Categoria)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(m => m.Categoria.Descripcion)</dd>
-        <dt class="col-sm-2">@Html.DisplayNameFor(m => m.Imagen)</dt>
-        <dd class="col-sm-10">
-            <div>
-                <div>
-                    @{
-                        var nombreImagen = "imagen-no-disponible.jpg";
-                        if (Model.Imagen != null)
-                        {
-                            nombreImagen = Model.Imagen;
-                        }
-                    }
-                    <img src="~/imagenes/@nombreImagen" height="250" width="250"
-                         asp-append-version="true" />
-                </div>
-                <br />
-                <div>
-                    <form enctype="multipart/form-data" asp-action="CambiarImagen">
-                        <div class="form-group" hidden>
-                            <label asp-for="Id" class="control-label"></label>
-                            <input asp-for="Id" class="form-control" />
-                        </div>
-                        <div class="form-group">
-                            <input type="file" asp-for="Imagen" class="form-control-file">
-                        </div>
-                        <br />
-                        <div class="form-group">
-                            <input type="submit" value="Actualizar imagen" class="btn btn-sm btn-primary rounded-0" />
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </dd>
-    </dl>
-</div>
+<h4>Producto</h4>
+<hr />
 
 <div>
-    <a asp-action="Index">Volver</a>
+    @{
+        var esUrl = Model.Imagen != null && (Model.Imagen.StartsWith("http://") || Model.Imagen.StartsWith("https://"));
+    }
+    @if (esUrl)
+    {
+        <img src="@Model.Imagen" height="250" width="250" style="object-fit:contain" />
+    }
+    else
+    {
+        var nombreImagen = Model.Imagen ?? "imagen-no-disponible.jpg";
+        <img src="~/imagenes/@nombreImagen" height="250" width="250" style="object-fit:contain" asp-append-version="true" />
+    }
 </div>
+
+<hr />
+
+<form asp-action="CambiarImagen" asp-route-id="@Model.Id">
+    <div class="form-group">
+        <label class="control-label">URL de la imagen</label>
+        <input type="text" name="imagenUrl" class="form-control" placeholder="https://ejemplo.com/imagen.jpg" />
+    </div>
+    <br />
+    <div class="form-group">
+        <input type="submit" value="Actualizar imagen" class="btn btn-primary" />
+        <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+    </div>
+</form>

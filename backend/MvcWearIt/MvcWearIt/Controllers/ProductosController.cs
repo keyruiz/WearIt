@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,12 +15,10 @@ namespace MvcWearIt.Controllers
     public class ProductosController : Controller
     {
         private readonly MvcWearItContexto _context;
-        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProductosController(MvcWearItContexto context, IWebHostEnvironment webHostEnvironment)
+        public ProductosController(MvcWearItContexto context)
         {
             _context = context;
-            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: Productos
@@ -74,34 +71,17 @@ namespace MvcWearIt.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Descripcion,Texto,PrecioCadena,CategoriaId,JuegoId")] Producto producto, IFormFile imagen)
+        public async Task<IActionResult> Create([Bind("Id,Descripcion,Texto,PrecioCadena,CategoriaId,JuegoId")] Producto producto, string imagenUrl)
         {
             if (ModelState.IsValid)
             {
-                if (imagen != null)
+                _context.Add(producto);
+                await _context.SaveChangesAsync();
+
+                if (!string.IsNullOrWhiteSpace(imagenUrl))
                 {
-                    string strRutaImagenes = Path.Combine(_webHostEnvironment.WebRootPath, "imagenes");
-                    Directory.CreateDirectory(strRutaImagenes);
-                    string strExtension = Path.GetExtension(imagen.FileName);
-
-                    _context.Add(producto);
-                    await _context.SaveChangesAsync();
-
-                    string strNombreFichero = producto.Id.ToString() + strExtension;
-                    string strRutaFichero = Path.Combine(strRutaImagenes, strNombreFichero);
-
-                    using (var fileStream = new FileStream(strRutaFichero, FileMode.Create))
-                    {
-                        await imagen.CopyToAsync(fileStream);
-                    }
-
-                    producto.Imagen = strNombreFichero;
+                    producto.Imagen = imagenUrl;
                     _context.Update(producto);
-                    await _context.SaveChangesAsync();
-                }
-                else
-                {
-                    _context.Add(producto);
                     await _context.SaveChangesAsync();
                 }
 
@@ -135,7 +115,7 @@ namespace MvcWearIt.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Descripcion,Texto,PrecioCadena,CategoriaId,JuegoId")] Producto producto, IFormFile imagen)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Descripcion,Texto,PrecioCadena,CategoriaId,JuegoId")] Producto producto, string imagenUrl)
         {
             if (id != producto.Id)
             {
@@ -155,20 +135,9 @@ namespace MvcWearIt.Controllers
                     productoExistente.CategoriaId = producto.CategoriaId;
                     productoExistente.JuegoId = producto.JuegoId;
 
-                    if (imagen != null)
+                    if (!string.IsNullOrWhiteSpace(imagenUrl))
                     {
-                        string strRutaImagenes = Path.Combine(_webHostEnvironment.WebRootPath, "imagenes");
-                    Directory.CreateDirectory(strRutaImagenes);
-                        string strExtension = Path.GetExtension(imagen.FileName);
-                        string strNombreFichero = producto.Id.ToString() + strExtension;
-                        string strRutaFichero = Path.Combine(strRutaImagenes, strNombreFichero);
-
-                        using (var fileStream = new FileStream(strRutaFichero, FileMode.Create))
-                        {
-                            await imagen.CopyToAsync(fileStream);
-                        }
-
-                        productoExistente.Imagen = strNombreFichero;
+                        productoExistente.Imagen = imagenUrl;
                     }
 
                     _context.Update(productoExistente);
@@ -248,40 +217,29 @@ namespace MvcWearIt.Controllers
         // POST: Productos/CambiarImagen/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CambiarImagen(int? id, IFormFile imagen)
+        public async Task<IActionResult> CambiarImagen(int? id, string imagenUrl)
         {
             if (id == null) return NotFound();
 
             var producto = await _context.Productos.FindAsync(id);
             if (producto == null) return NotFound();
 
-            if (imagen == null) return NotFound();
+            if (string.IsNullOrWhiteSpace(imagenUrl))
+                return NotFound();
 
-            if (ModelState.IsValid)
+            producto.Imagen = imagenUrl;
+
+            try
             {
-                string strRutaImagenes = Path.Combine(_webHostEnvironment.WebRootPath, "imagenes");
-                    Directory.CreateDirectory(strRutaImagenes);
-                string strExtension = Path.GetExtension(imagen.FileName);
-                string strNombreFichero = producto.Id.ToString() + strExtension;
-                string strRutaFichero = Path.Combine(strRutaImagenes, strNombreFichero);
-
-                using (var fileStream = new FileStream(strRutaFichero, FileMode.Create))
-                {
-                    await imagen.CopyToAsync(fileStream);
-                }
-
-                producto.Imagen = strNombreFichero;
-                try
-                {
-                    _context.Update(producto);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProductoExists(producto.Id)) return NotFound();
-                    else throw;
-                }
+                _context.Update(producto);
+                await _context.SaveChangesAsync();
             }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ProductoExists(producto.Id)) return NotFound();
+                else throw;
+            }
+
             return RedirectToAction(nameof(Index));
         }
 

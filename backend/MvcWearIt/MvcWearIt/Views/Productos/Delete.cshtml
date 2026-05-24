@@ -39,7 +39,18 @@
             @Html.DisplayNameFor(model => model.Imagen)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Imagen)
+            @{
+                var esUrl = Model.Imagen != null && (Model.Imagen.StartsWith("http://") || Model.Imagen.StartsWith("https://"));
+            }
+            @if (esUrl)
+            {
+                <img src="@Model.Imagen" height="100" />
+            }
+            else
+            {
+                var nombreImagen = Model.Imagen ?? "imagen-no-disponible.jpg";
+                <img src="~/imagenes/@nombreImagen" height="100" asp-append-version="true" />
+            }
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Categoria)

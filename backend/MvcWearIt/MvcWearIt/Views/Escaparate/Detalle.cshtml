@@ -19,13 +19,17 @@
         <div class="col-md-6">
             <div class="text-center">
                 @{
-                    var nombreImagen = "imagen-no-disponible.jpg";
-                    if (Model.Imagen != null)
-                    {
-                        nombreImagen = Model.Imagen;
-                    }
+                    var esUrl = Model.Imagen != null && (Model.Imagen.StartsWith("http://") || Model.Imagen.StartsWith("https://"));
                 }
-                <img src="~/imagenes/@nombreImagen" class="img-fluid rounded shadow" style="max-height:400px;object-fit:contain" asp-append-version="true" />
+                @if (esUrl)
+                {
+                    <img src="@Model.Imagen" class="img-fluid rounded shadow" style="max-height:400px;object-fit:contain" />
+                }
+                else
+                {
+                    var nombreImagen = Model.Imagen ?? "imagen-no-disponible.jpg";
+                    <img src="~/imagenes/@nombreImagen" class="img-fluid rounded shadow" style="max-height:400px;object-fit:contain" asp-append-version="true" />
+                }
             </div>
         </div>
         <div class="col-md-6">

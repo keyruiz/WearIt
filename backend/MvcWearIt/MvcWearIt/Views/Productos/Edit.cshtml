@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit" enctype="multipart/form-data">
+        <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
@@ -29,18 +29,22 @@
                 <span asp-validation-for="PrecioCadena" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label class="control-label">Imagen</label>
+                <label class="control-label">URL de la imagen</label>
                 <div>
                     @{
-                        var nombreImagen = "imagen-no-disponible.jpg";
-                        if (Model.Imagen != null)
-                        {
-                            nombreImagen = Model.Imagen;
-                        }
+                        var esUrl = Model.Imagen != null && (Model.Imagen.StartsWith("http://") || Model.Imagen.StartsWith("https://"));
                     }
-                    <img src="~/imagenes/@nombreImagen" height="100" asp-append-version="true" />
+                    @if (esUrl)
+                    {
+                        <img src="@Model.Imagen" height="100" />
+                    }
+                    else
+                    {
+                        var nombreImagen = Model.Imagen ?? "imagen-no-disponible.jpg";
+                        <img src="~/imagenes/@nombreImagen" height="100" asp-append-version="true" />
+                    }
                 </div>
-                <input type="file" name="imagen" class="form-control-file" />
+                <input type="text" name="imagenUrl" class="form-control mt-2" placeholder="https://ejemplo.com/imagen.jpg" value="" />
             </div>
             <div class="form-group">
                 <label asp-for="CategoriaId" class="control-label"></label>

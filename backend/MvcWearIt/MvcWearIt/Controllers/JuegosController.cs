@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,12 +14,10 @@ namespace MvcWearIt.Controllers
     public class JuegosController : Controller
     {
         private readonly MvcWearItContexto _context;
-        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public JuegosController(MvcWearItContexto context, IWebHostEnvironment webHostEnvironment)
+        public JuegosController(MvcWearItContexto context)
         {
             _context = context;
-            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: Juegos
@@ -75,12 +72,20 @@ namespace MvcWearIt.Controllers
         [HttpPost]
         [Authorize(Roles = "Administrador")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Slug,ImagenPortada,ColorHex")] Juego juego)
+        public async Task<IActionResult> Create([Bind("Id,Nombre,Slug,ColorHex")] Juego juego, string imagenUrl)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(juego);
                 await _context.SaveChangesAsync();
+
+                if (!string.IsNullOrWhiteSpace(imagenUrl))
+                {
+                    juego.ImagenPortada = imagenUrl;
+                    _context.Update(juego);
+                    await _context.SaveChangesAsync();
+                }
+
                 return RedirectToAction(nameof(AdminIndex));
             }
             return View(juego);
@@ -109,7 +114,7 @@ namespace MvcWearIt.Controllers
         [HttpPost]
         [Authorize(Roles = "Administrador")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Slug,ColorHex")] Juego juego, IFormFile imagen)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Slug,ColorHex")] Juego juego, string imagenUrl)
         {
             if (id != juego.Id)
             {
@@ -127,20 +132,9 @@ namespace MvcWearIt.Controllers
                     juegoExistente.Slug = juego.Slug;
                     juegoExistente.ColorHex = juego.ColorHex;
 
-                    if (imagen != null)
+                    if (!string.IsNullOrWhiteSpace(imagenUrl))
                     {
-                        string strRutaImagenes = Path.Combine(_webHostEnvironment.WebRootPath, "imagenes");
-                        Directory.CreateDirectory(strRutaImagenes);
-                        string strExtension = Path.GetExtension(imagen.FileName);
-                        string strNombreFichero = "juego_" + juego.Id.ToString() + strExtension;
-                        string strRutaFichero = Path.Combine(strRutaImagenes, strNombreFichero);
-
-                        using (var fileStream = new FileStream(strRutaFichero, FileMode.Create))
-                        {
-                            await imagen.CopyToAsync(fileStream);
-                        }
-
-                        juegoExistente.ImagenPortada = strNombreFichero;
+                        juegoExistente.ImagenPortada = imagenUrl;
                     }
 
                     _context.Update(juegoExistente);

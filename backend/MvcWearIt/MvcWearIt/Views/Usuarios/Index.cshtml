@@ -55,6 +55,8 @@
                 </td>
                 <td>
                     <a asp-action="Details" asp-route-id="@user.Id">Ver Datos</a>
+                    <span class="mx-1">|</span>
+                    <a asp-action="ChangeRole" asp-route-id="@user.Id">Cambiar Rol</a>
                 </td>
             </tr>
         }
